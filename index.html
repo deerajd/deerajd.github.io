@@ -1,0 +1,291 @@
+<html>
+    <head>
+        <title>Live count</title>
+        <link rel="stylesheet" href="default_theme.css" />
+        <script src="odometer.js"></script>
+        <script type="text/javascript" src="jquery.js"></script>
+    </head>
+<script type="text/javascript">
+
+//d4dc036872a54bbdcd75cb8c3e749d7d
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+var count = 0;
+    $(document).ready(function(){
+        var igtoken = 'IGQVJWTDRtbEkzelhXZAzYwY2xfQzJxRUF4OE5WaUt0YW50SEkyTXdsTlBYdTdzejdqc1lKLU5IajRYbEVDNmE1NDQ5R1dnQ3diWDlhalhSMmhENmxoQk9uRWVRdW9rRWMzNnFFQkRxSFZAIRFZAfRUMxaAZDZD';
+        var api = 'AIzaSyDNHU-B_w7YVw25M6jKj2VoIc7cUeNk1cU$';
+        var api2 = 'AIzaSyD5pHmsWMJqiDsU76dZ9v9HLcmrUY1eXT8$';
+        var liveid = 'zcrUCvBD16k';
+        var yturl = 'https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id='+liveid+'&fields=items%2FliveStreamingDetails%2FconcurrentViewers&key='+api2+'';
+        $.getJSON(yturl, function(data){
+            $('#watching').html(data.items[0].liveStreamingDetails.concurrentViewers);  //no of watching live
+        });
+
+        var ytlikeurl = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id='+liveid+'&fields=items%2Fstatistics&key='+api+'';
+        $.getJSON(ytlikeurl, function(data){
+            $('#like').html(data.items[0].statistics.likeCount);  //no of likes
+            $('#dislike').html(data.items[0].statistics.dislikeCount);
+        });
+        var n = 10;
+        var i=0;
+        var chanName3 = ["jcGOWapKZY2RcyZqiqthxl5E","pcGGaapubV5qf1aSkdJZk","kbGKSbZSWaWZcyZqiqthxl5E","mb2CWapWcY2dcyZqiqthxl5E","ja2KZZZqWaFqczKOjq6FmlQ","jcWSTbJiaaVqczKOjq6FmlQ","ma2eWaZWdamRcyZqiqthxl5E","kbWeaaJaVZGhcyZqiqthxl5E","kb2aXbZeYZFqczKOjq6FmlQ","pcWeSZ5SLl52o1qVtaZQ"];
+        var chanName = ["cristiano","arianagrande","therock","selenagomez","kyliejenner","kimkardashian","leomessi","beyonce","neymarjr","natgeo"];
+        var chanName1 = ["173560420","7719696","232192182","460563723","12281817","18428658","427553890","247944034","26669533","787132"];
+        var temp = [0,0,0,0,0,0,0,0,0,0];
+        var index = 0;
+        var indexdone = 0;
+        var avg = [];
+        avg[0]=[];
+        avg[1]=[];
+        avg[2]=[];
+        avg[3]=[];
+        avg[4]=[];
+        avg[5]=[];
+        avg[6]=[];
+        avg[7]=[];
+        avg[8]=[];
+        avg[9]=[];
+        var mean = 0;
+
+
+        var countDownDate = new Date("Jan 5, 2019 15:37:25").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = now - countDownDate;
+    
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+  // Output the result in an element with id="demo"
+  document.getElementById("demo").innerHTML = days +":"+ hours +":"
+  + minutes + ":" + seconds;
+    
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "EXPIRED";
+  }
+}, 1000);
+
+
+        for(i=0;i<n;i++)
+        {
+        loadChannel(chanName[i],i);
+        }
+        function loadChannel(name,x){
+                $('#image'+x+'').html('<img src="images/'+chanName[x]+'.jpg"/>');
+                $('#name'+x+'').html("@"+chanName[x]);
+        }
+        setInterval(function(){
+            var min=0; 
+            var max=10;  
+            var r= Math.floor(Math.random() * (+max - +min)) + +min;
+            var s= Math.floor(Math.random() * (+max - +min)) + +min; 
+
+                
+                //refresh watching
+                var yturl = 'https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails&id='+liveid+'&fields=items%2FliveStreamingDetails%2FconcurrentViewers&key='+api2+'';
+                 $.getJSON(yturl, function(data){
+                $('#watching').html(data.items[0].liveStreamingDetails.concurrentViewers);  //no of watching live
+                });
+
+                //refresh likes 
+                var ytlikeurl = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id='+liveid+'&fields=items%2Fstatistics&key='+api+'';
+                $.getJSON(ytlikeurl, function(data){
+                $('#like').html(data.items[0].statistics.likeCount);  //no of likes
+                $('#dislike').html(data.items[0].statistics.dislikeCount);
+                 });
+                 if(i==0){
+                    for(q=0;q<n;q=q+2){
+                   loadChannel2(q);
+                    }
+                 }
+                    else{
+                        for(q=1;q<n;q=q+2){
+                        loadChannel2(q);
+                    }
+                 }
+
+                    
+              //  }
+           function loadChannel2(x){
+                
+                var url = 'https://www.instagram.com/'+chanName[x]+'?__a=1';
+                $.getJSON(url, function(data1){ })
+                   
+        .done(function(data1){
+                count=count+0.1;
+                $('#odometer'+x+'').html(data1.graphql.user.edge_followed_by.count);
+                $("#count").html(count);
+            
+              
+        })
+             .fail(function(){
+                    var url1 = 'https://www.instagram.com/graphql/query/?query_id=17851374694183129&id='+chanName1[x]+'&first=20';
+
+                    $.getJSON(url1, function(data2){ })
+                   
+                   .done(function(data2){
+
+                    count=count-0.1;
+                $('#odometer'+x+'').html(data2.data.user.edge_followed_by.count);
+                $("#count").html(count);
+                   });
+                   
+                  });
+                 /* if(x<n){
+                      x++;
+                  loadChannel2(x);
+                  }*/
+                }   
+                i++;
+                i=i%2;
+            
+          },5000);
+    });
+
+</script>
+<style>
+    p {
+        color: white;
+        font-family: 'Playfair Display', serif;
+	font-size: 24px;
+	font-size: 2.4rem;
+	font-style: italic;
+	margin-bottom: 20px;
+    }
+
+   img{
+        height: 160px;
+	float: left;
+	width: 160px;
+    }
+    .last1{
+        color: white;
+        font-family: 'Playfair Display', serif;
+	    font-size: 30px;
+	    font-size: 7rem;
+	    font-style: italic;
+	    margin-bottom: auto;
+        margin-top: auto;
+        padding-right: 30px;
+        float: left;
+        
+    }
+
+    .last{
+        color: white;
+        font-family: 'Playfair Display', serif;
+	    font-size: 80px;
+	    font-size: 7rem;
+	    font-style: italic;
+	    margin-bottom: auto;
+        margin-top: auto;
+        padding-right: 87px;
+        float: left;
+        
+    }
+
+    .list{
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1280px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	text-align: center;
+    overflow: auto;
+    }
+
+</style>
+
+    <body style="background-image: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);">
+        <centre>
+            <p id="count" class="odometer">watching</p></br>   
+            <p id="demo" class="odometer">0</p>
+               <p id="div#ipv6-address"></p>
+               <p id="watching" class="odometer">watching</p></br>
+               <p id="like" class="odometer">watching</p></br>
+               <p id="dislike" class="odometer">watching</p></br>
+               <div class="list">
+               <h3 class="last">#1</h3>
+               <p id="image0">image</p>
+               <p id="name0">username</p>
+               <p id="odometer0" class="odometer">0</p>
+               </div>
+               <div class="list">
+               <h3 class="last">#2</h3>
+               <p id="image1">image</p>
+               <p id="name1">username</p>
+               <p id="odometer1" class="odometer">0</p>
+               </div>
+               <div class="list">
+               <h3 class="last">#3</h3>
+               <p id="image2">image</p>
+               <p id="name2">username</p>
+               <p id="odometer2" class="odometer">0</p>
+               </div>
+               <div class="list">
+                <h3 class="last">#4</h3>
+                <p id="image3">image</p>
+                <p id="name3">username</p>
+                <p id="odometer3" class="odometer">0</p>
+                </div>
+                <div class="list">
+                <h3 class="last">#5</h3>
+                <p id="image4">image</p>
+                <p id="name4">username</p>
+                <p id="odometer4" class="odometer">0</p>
+                </div>
+                <div class="list">
+                <h3 class="last">#6</h3>
+                <p id="image5">image</p>
+                <p id="name5">username</p>
+                <p id="odometer5" class="odometer">0</p>
+                </div>
+                <div class="list">
+               <h3 class="last">#7</h3>
+               <p id="image6">image</p>
+               <p id="name6">username</p>
+               <p id="odometer6" class="odometer">0</p>
+               </div>
+               <div class="list">
+               <h3 class="last">#8</h3>
+               <p id="image7">image</p>
+               <p id="name7">username</p>
+               <p id="odometer7" class="odometer">0</p>
+               </div>
+               <div class="list">
+               <h3 class="last">#9</h3>
+               <p id="image8">image</p>
+               <p id="name8">username</p>
+               <p id="odometer8" class="odometer">0</p>
+               </div>
+               <div class="list">
+                <h3 class="last1">#10</h3>
+                <p id="image9">image</p>
+                <p id="name9">username</p>
+                <p id="odometer9" class="odometer">0</p>
+                </div>
+                
+            </centre>
+    </body>
+</html>
