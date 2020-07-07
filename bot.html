@@ -1,0 +1,119 @@
+<script src="https://apis.google.com/js/api.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+  /**
+   * Sample JavaScript code for youtube.liveChatMessages.insert
+   * See instructions for running APIs Explorer code samples locally:
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+
+   var x='0';
+   var i=0;
+   var j=5;
+   var msg='0';
+   var nm='0';
+   var copyright = ['T-Series','Saregama Music','YRF','Universal Music India','Tips Official','Sony Music India','Times Music','Eros Now'];
+   var livechatid = 'EiEKGFVDbXY2M09yVDVidE5KbVRKa3R5Vk8yQRIFL2xpdmUqJwoYVUNtdjYzT3JUNWJ0TkptVEprdHlWTzJBEgtHNUtVY2F1UkxPYw';
+   var nexttoken= 'GNTe0Kjvt-oCIPnE_bfvt-oC';
+   //var livechatid = 'EiEKGFVDRUhvYWVaMl9YMm1OWTd0YXkzd2ZidxIFL2xpdmUqJwoYVUNFSG9hZVoyX1gybU5ZN3RheTN3ZmJ3Egt2T0wyRW5oaXB6QQ';
+   //var nexttoken= 'GP2034ewuuoCIN-fvvawuuoC';
+   var api= ['AIzaSyDNHU-B_w7YVw25M6jKj2VoIc7cUeNk1cU','AIzaSyD5pHmsWMJqiDsU76dZ9v9HLcmrUY1eXT8','AIzaSyBU-vv3BKa9ok9nSUKJO3CutZvef8LqqYU','AIzaSyCKqKcw8XEk_dBh7lVtyIXdX6FbkCUeneU','AIzaSyBmIapOkW2kX7sFBmn6v04Z5XbFBDQVHmY','AIzaSyCDEmxO_3tmSGPcQQZLNOsp6r07VUjvxPo','AIzaSyBO9vfvLiAshnqOVgbM329smMlkz5dPxNU'];
+   var apii = ['AIzaSyB8Sr22VPN8SmPWj1s-fcJbsd8EWW8xqSU','AIzaSyDzzoeHtm1QHfToEQQUu4niAJ2mSFaf6iA'];
+   var cli = ['304854158269-sr0vfag4dmqv2ikc3bga3h9053b8l5v2.apps.googleusercontent.com','539808213958-59jt9crsrfgb9jlf6vmldq4v8slnea2t.apps.googleusercontent.com'];
+   
+   function youtube_parser(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+}
+  function authenticate() {
+    return gapi.auth2.getAuthInstance()
+        .signIn({scope: "https://www.googleapis.com/auth/youtube.force-ssl"})
+        .then(function() { console.log("Sign-in successful");
+         },
+              function(err) { console.error("Error signing in", err); });
+  }
+  function loadClient() {
+    gapi.client.setApiKey(apii[i]);
+    return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+        .then(function() { console.log("GAPI client loaded for API"); },
+              function(err) { console.error("Error loading GAPI client for API", err); });
+  }
+
+  function voting(){                 
+                        var url = 'https://www.googleapis.com/youtube/v3/liveChat/messages?liveChatId='+livechatid+'&part=snippet&part=authorDetails&pageToken='+nexttoken+'&key='+api[i]+'';
+                        $.getJSON(url, function(dat){ })
+                           
+                        .done(function(dat){
+                                nexttoken = dat.nextPageToken;
+                                for(i=0;i<dat.items.length;i++){
+                                if(dat.items[i].snippet.authorChannelId!='UCSvjQBDgYDB5TGVmCZObcwA'){
+                                if(dat.items[i].snippet.textMessageDetails.messageText.startsWith("!play")){
+                                  nm=dat.items[i].authorDetails.displayName;
+                                  msg = youtube_parser(dat.items[i].snippet.textMessageDetails.messageText.split("!play ")[1]);
+                                  var url1= 'https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id='+msg+'&key='+api[j]+'';
+                                  $.getJSON(url1, function(data1){})
+                                  .done(function(data){
+                                      if(copyright.indexOf(data.items[0].snippet.channelTitle) < 0){
+                                         if(data.items[0].snippet.categoryId==10){
+                                            if(Number((data.items[0].contentDetails.duration.split("M")[0]).split("T")[1])<10){
+                                                  execute("!songs request "+msg+"");
+                                            }
+                                            else{
+                                                  execute(nm+", duration of "+data.items[0].snippet.title+" is more than 10 minutes😓");
+                                            }
+                                         }
+                                         else{
+                                                  execute(nm+", category of "+data.items[0].snippet.title+" is not Music😓");
+                                         }
+                                      }
+                                      else{
+                                        execute(nm+", "+data.items[0].snippet.title+" is a copyrighted video😓");
+                                      }
+                                   })
+                                   .fail(function(){
+                                         j++;
+                                         j=j%7;
+                                   });
+                                }
+                              }
+                            }
+                     })
+                     .fail(function(){
+                       i++;
+                       i=i%7;
+                        });
+                      }
+
+                      setInterval( function() {
+                          voting();
+                        }, 30000);
+
+  // Make sure the client is loaded and sign-in is complete before calling this method.
+  function execute(x) {
+    return gapi.client.youtube.liveChatMessages.insert({
+      "part": [
+        "snippet"
+      ],
+      "resource": {
+        "snippet": {
+          "liveChatId": livechatid,
+          "type": "textMessageEvent",
+          "textMessageDetails": {
+            "messageText": x
+          }
+        }
+      }
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+               
+              },
+              function(err) { console.error("Execute error", err); });
+  }
+  gapi.load("client:auth2", function() {
+    gapi.auth2.init({client_id: cli[i]});
+  });
+</script>
+<button onclick="authenticate().then(loadClient)">authorize and load</button>
+<button onclick="execute('hi how are you')">execute</button>
