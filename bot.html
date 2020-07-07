@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <script src="https://apis.google.com/js/api.js"></script>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript">
@@ -115,5 +117,8 @@
     gapi.auth2.init({client_id: cli[i]});
   });
 </script>
+<body>
 <button onclick="authenticate().then(loadClient)">authorize and load</button>
 <button onclick="execute('hi how are you')">execute</button>
+</body>
+</html>
